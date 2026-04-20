@@ -1,0 +1,52 @@
+LEX Program (x1.l)
+%{
+#include "y.tab.h"
+#include <stdlib.h>
+%}
+
+%%
+
+[0-9]+  { yylval = atoi(yytext); return NUM; }
+[+]     { return '+'; }
+[-]     { return '-'; }
+[*]     { return '*'; }
+[/]     { return '/'; }
+\n      { return 0; }
+.       { return yytext[0]; }
+
+%%
+
+int yywrap() {
+    return 1;
+}
+
+LEX Program (anbn.l)
+%{
+#include "y.tab.h"
+%}
+
+%%
+
+a   { return A; }
+b   { return B; }
+\n  { return '\n'; }
+.   { return yytext[0]; }
+
+%%
+
+int yywrap() {
+    return 1;
+}
+
+Commands
+sudo apt update
+sudo apt install flex bison gcc
+Step 1: Generate lexer
+lex x1.l -> creates lex.yy.c
+Step 2: Generate parser
+yacc -d x1.y -> creates y.tab.c & y.tab.h
+Step 3: Compile
+gcc lex.yy.c y.tab.c -o output
+Step 4: Run
+./output
+then give input (eg: 4+5, aaabbb)
